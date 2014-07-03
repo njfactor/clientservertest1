@@ -1,0 +1,116 @@
+<html>
+<head>
+
+<title>Form</title>
+<style>
+	
+	#content{
+		text-align:center;
+		}
+</style>
+
+<script src="https://code.jquery.com/jquery-1.9.1.js" type='text/javascript'></script>
+
+
+</head>
+<body>
+<div id="content">
+<h1>Portal</h1>
+
+product-Id:  <input type="text" name="prodID" id="prodID"><br><br>
+url:<input type="text" name="serverURL" id="serverURL"><br><br>
+<button id="get">Generate GET request</button><br>
+<div id="getResult"></div><br>
+<img id="dynimg" />
+<br><br>
+
+url:<input type="text" name="serverURLpost" id="serverURLpost"><br><br>
+<button id="post">Generate Post request</button><br><br>
+<div id="postresult"></div><br>
+</div>
+
+<script>
+$("#get").click(function(event) {
+event.preventDefault();
+
+
+var finurl= getQueryString($("#serverURL").val(),$("#prodID").val());
+var jqxhr= $.get( finurl, function( data ) {
+//alert(data);
+
+arr.push(data);
+$("#getResult").text(data.mallPrice+" "+ data.imgURL);
+$("#dynimg").attr("src", data.imgURL);
+},"json");
+});
+
+$("#post").click(function(event){
+
+
+event.preventDefault();
+mycart=new cart("222333",45,arr,12345.00);
+var finurl=$("#serverURLpost").val();
+
+ dat= JSON.stringify(mycart);
+
+
+ $.ajax
+   ({
+      type: "POST",
+      url: finurl,
+	  //contentType : 'application/json',
+      data:dat,
+      success: function (data) {
+
+       $("#postresult").text(data);
+      }
+  });
+
+
+
+
+});
+
+</script>
+
+<script>
+
+function getQueryString (url,pid)
+{
+return  url+"?method=getProductDetails&pID="+pid;
+
+}
+
+function cart( cartID,  itemQuantity, prodarr, total){
+this.cartID=cartID;
+this.itemQuantity=itemQuantity;
+this.prodarr=prodarr;
+this.total=total;
+}
+
+$.fn.serializeObject = function()
+{
+    var o = {};
+    var a = this.serializeArray();
+    $.each(a, function() {
+        if (o[this.name] !== undefined) {
+            if (!o[this.name].push) {
+                o[this.name] = [o[this.name]];
+            }
+            o[this.name].push(this.value || '');
+        } else {
+            o[this.name] = this.value || '';
+        }
+    });
+    return o;
+};
+
+
+var arr=[];
+
+var mycart;
+</script>
+
+
+</body>
+</html>
